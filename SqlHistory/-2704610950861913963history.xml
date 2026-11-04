@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[select * from dba_users;]]></sql>
+		<connection><![CDATA[clinic_CDB]]></connection>
+		<timestamp><![CDATA[1764687334949]]></timestamp>
+		<type><![CDATA[SQL]]></type>
+		<executed><![CDATA[1]]></executed>
+		<execTime><![CDATA[0.078]]></execTime>
+	</historyItem>
+</history>

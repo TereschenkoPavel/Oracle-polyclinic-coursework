@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[file:/C:/Users/pavel/AppData/Roaming/SQL Developer/lab3sql]]></sql>
+		<connection><![CDATA[TPA_Conn]]></connection>
+		<timestamp><![CDATA[1764612647657]]></timestamp>
+		<type><![CDATA[Script]]></type>
+		<executed><![CDATA[17]]></executed>
+		<execTime><![CDATA[0.0]]></execTime>
+	</historyItem>
+</history>

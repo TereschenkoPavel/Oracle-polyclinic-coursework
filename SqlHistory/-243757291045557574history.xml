@@ -1,0 +1,12 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[SELECT type, record_size, records_total, records_used
+FROM v$controlfile_record_section]]></sql>
+		<connection><![CDATA[TPA_Conn]]></connection>
+		<timestamp><![CDATA[1762695166483]]></timestamp>
+		<type><![CDATA[SQL]]></type>
+		<executed><![CDATA[1]]></executed>
+		<execTime><![CDATA[0.125]]></execTime>
+	</historyItem>
+</history>

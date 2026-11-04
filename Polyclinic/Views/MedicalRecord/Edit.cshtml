@@ -1,0 +1,97 @@
+﻿﻿@using Clinic.Models;
+@model MedicalRecordModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Редактирование медицинской записи";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h3>@ViewData["Title"]</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" method="post">
+                    <input type="hidden" asp-for="RecordId" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">Пациент</label>
+                                <input type="text" class="form-control-plaintext" readonly
+                                       value="@Model.PatientName" />
+                                <small class="text-muted">ID: @Model.PatientId</small>
+                                <input type="hidden" asp-for="PatientId" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">Врач</label>
+                                <input type="text" class="form-control-plaintext" readonly
+                                       value="@Model.DoctorName" />
+                                <small class="text-muted">ID: @Model.DoctorId</small>
+                                <input type="hidden" asp-for="DoctorId" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">Дата создания</label>
+                                <input type="text" class="form-control-plaintext" readonly
+                                       value="@Model.RecordDate.ToString("dd.MM.yyyy HH:mm")" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Diagnosis" class="control-label"></label>
+                        <textarea asp-for="Diagnosis"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Введите диагноз"
+                                  required></textarea>
+                        <span asp-validation-for="Diagnosis" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Prescription" class="control-label"></label>
+                        <textarea asp-for="Prescription"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Введите назначения (лечение, рекомендации)"></textarea>
+                        <span asp-validation-for="Prescription" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Notes" class="control-label"></label>
+                        <textarea asp-for="Notes"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Дополнительные заметки"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save"></i> Сохранить изменения
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Отмена
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

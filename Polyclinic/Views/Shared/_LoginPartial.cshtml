@@ -1,0 +1,61 @@
+﻿@using System.Security.Claims
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="dropdown">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user-circle"></i> @User.Identity.Name
+            <span class="badge bg-secondary ms-1">@User.FindFirstValue("Role")</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li>
+                <span class="dropdown-item-text">
+                    <small>Логин: @User.Identity.Name</small><br>
+                    <small>Роль: @User.FindFirstValue("Role")</small>
+                    @if (!string.IsNullOrEmpty(User.FindFirstValue("DoctorId")))
+                    {
+                        <br>
+
+                        <small>ID врача: @User.FindFirstValue("DoctorId")</small>
+                    }
+                </span>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item" asp-controller="Home" asp-action="Dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Панель управления
+                </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form id="logoutForm" class="form-inline" asp-controller="Auth" asp-action="Logout" method="post">
+                    <button type="submit" class="dropdown-item text-danger">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+}
+else
+{
+    <div class="btn-group" role="group">
+        <a class="btn btn-outline-primary" asp-controller="Auth" asp-action="Login">
+            <i class="fas fa-sign-in-alt"></i> Вход
+        </a>
+    </div>
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var logoutForm = document.getElementById('logoutForm');
+        if (logoutForm) {
+            logoutForm.addEventListener('submit', function(e) {
+                if (!confirm('Вы уверены, что хотите выйти?')) {
+                    e.preventDefault();
+                }
+            });
+        }
+    });
+</script>

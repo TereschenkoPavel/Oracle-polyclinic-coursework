@@ -1,0 +1,61 @@
+﻿@using Clinic.Models;
+@model AppointmentModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Отмена записи на прием";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h3>@ViewData["Title"]</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Внимание!</h4>
+                    <p>Вы уверены, что хотите отменить эту запись? Это действие нельзя отменить.</p>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5>Информация о записи</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Пациент:</strong> @Model.PatientName</p>
+                                <p><strong>Врач:</strong> @Model.DoctorName</p>
+                                <p><strong>Дата и время:</strong> @Model.AppointmentDate.ToString("dd.MM.yyyy HH:mm")</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Кабинет:</strong> @Model.OfficeNumber</p>
+                                <p><strong>Специальность:</strong> @Model.SpecialtyName</p>
+                                <p><strong>Телефон пациента:</strong> @Model.Phone</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Важно:</strong> Отменить запись можно не позднее чем за 2 часа до назначенного времени.
+                    Если запись уже началась или до начала осталось менее 2 часов, свяжитесь с пациентом по телефону.
+                </div>
+
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="AppointmentId" />
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-calendar-times"></i> Отменить запись
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Вернуться
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

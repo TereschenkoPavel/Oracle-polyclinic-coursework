@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[SELECT CLUSTER_NAME FROM USER_CLUSTERS;]]></sql>
+		<connection><![CDATA[TPA]]></connection>
+		<timestamp><![CDATA[1765862516788]]></timestamp>
+		<type><![CDATA[SQL]]></type>
+		<executed><![CDATA[3]]></executed>
+		<execTime><![CDATA[0.269]]></execTime>
+	</historyItem>
+</history>

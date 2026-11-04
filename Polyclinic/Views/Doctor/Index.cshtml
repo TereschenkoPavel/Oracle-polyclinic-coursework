@@ -1,0 +1,74 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Clinic.Models;
+@model List<DoctorModel>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Список врачей";
+}
+
+<h1>Список врачей</h1>
+
+@if (User.IsInRole("HEAD_DOCTOR"))
+{
+    <div class="mb-3">
+        <a asp-action="Create" class="btn btn-success">Добавить врача</a>
+    </div>
+}
+
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>ФИО</th>
+                    <th>Специальность</th>
+                    <th>Кабинет</th>
+                    <th>Телефон</th>
+                    <th>Паспорт</th>
+                    @if (User.IsInRole("HEAD_DOCTOR"))
+                    {
+                        <th>Действия</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var doctor in Model)
+                {
+                    <tr>
+                        <td>@doctor.DoctorId</td>
+                        <td>
+                            <strong>@doctor.LastName @doctor.FirstName @doctor.MiddleName</strong>
+                        </td>
+                        <td>@doctor.SpecialtyName</td>
+                        <td>
+                            <span class="badge bg-info">@doctor.OfficeNumber</span>
+                        </td>
+                        <td>@doctor.Phone</td>
+                        <td><small>@doctor.PassportSeriesNumber</small></td>
+                        @if (User.IsInRole("HEAD_DOCTOR"))
+                        {
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a asp-action="Edit" asp-route-id="@doctor.DoctorId" class="btn btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@doctor.DoctorId" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> Врачи не найдены.
+    </div>
+}

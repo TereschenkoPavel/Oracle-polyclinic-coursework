@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[file:/C:/Users/pavel/AppData/Roaming/SQL Developer/createClinicTables.sql]]></sql>
+		<connection><![CDATA[clinic_CDB]]></connection>
+		<timestamp><![CDATA[1765924979454]]></timestamp>
+		<type><![CDATA[Script]]></type>
+		<executed><![CDATA[1]]></executed>
+		<execTime><![CDATA[0.0]]></execTime>
+	</historyItem>
+</history>

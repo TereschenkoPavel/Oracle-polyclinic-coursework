@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[select sum(min_size), sum(max_size), sum(current_size) from v$sga_dynamic_components;]]></sql>
+		<connection><![CDATA[TPA_Conn]]></connection>
+		<timestamp><![CDATA[1763390233416]]></timestamp>
+		<type><![CDATA[SQL]]></type>
+		<executed><![CDATA[1]]></executed>
+		<execTime><![CDATA[0.0]]></execTime>
+	</historyItem>
+</history>

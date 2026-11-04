@@ -1,0 +1,120 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Панель заведующего";
+}
+
+<div class="container">
+    <h1 class="mb-4">@ViewData["Title"]</h1>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Управление врачами</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Добавление, просмотр и управление врачами клиники.</p>
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Doctor" asp-action="Index" class="btn btn-primary">Список врачей</a>
+                        <a asp-controller="Doctor" asp-action="Create" class="btn btn-success">Добавить врача</a>
+                        <a asp-controller="DoctorSchedule" asp-action="Index" class="btn btn-success"> Расписание врачей</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Управление регистраторами</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Добавление и управление регистраторами клиники.</p>
+                    <div class="d-grid gap-2">
+                        <a asp-controller="UserManagement" asp-action="Index" class="btn btn-primary">Список регистраторов</a>
+                        <a asp-controller="UserManagement" asp-action="Create" class="btn btn-success">Добавить регистратора</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Управление пациентами</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Просмотр и управление информацией о пациентах.</p>
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Patient" asp-action="Index" class="btn btn-primary">Список пациентов</a>
+                        <a asp-controller="Patient" asp-action="Create" class="btn btn-success">Добавить пациента</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Управление приемами</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Просмотр и управление записями на приемы.</p>
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Appointment" asp-action="Index" class="btn btn-primary">Список приемов</a>
+                        <a asp-controller="Appointment" asp-action="Create" class="btn btn-success">Создать запись</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Медицинские записи</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Просмотр медицинских записей пациентов.</p>
+                    <a asp-controller="MedicalRecord" asp-action="Index" class="btn btn-primary">Просмотр записей</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Результаты анализов</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Просмотр результатов лабораторных анализов.</p>
+                    <a asp-controller="TestResult" asp-action="Index" class="btn btn-primary">Просмотр результатов</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card dashboard-card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Статистика</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Статистика работы клиники.</p>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h3>@ViewBag.DoctorCount</h3>
+                                <small>Врачей</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h3>@ViewBag.PatientCount</h3>
+                                <small>Пациентов</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[select * from dba_roles;]]></sql>
+		<connection><![CDATA[clinic_PDB]]></connection>
+		<timestamp><![CDATA[1764862359441]]></timestamp>
+		<type><![CDATA[SQL]]></type>
+		<executed><![CDATA[1]]></executed>
+		<execTime><![CDATA[0.328]]></execTime>
+	</historyItem>
+</history>

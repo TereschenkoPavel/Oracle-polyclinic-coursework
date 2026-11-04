@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[file:/C:/Users/pavel/AppData/Roaming/SQL Developer/medical_record.sql]]></sql>
+		<connection><![CDATA[app_doc]]></connection>
+		<timestamp><![CDATA[1765963130563]]></timestamp>
+		<type><![CDATA[Script]]></type>
+		<executed><![CDATA[15]]></executed>
+		<execTime><![CDATA[0.0]]></execTime>
+	</historyItem>
+</history>

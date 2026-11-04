@@ -1,0 +1,223 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Панель врача";
+}
+
+<div class="container">
+    <h1 class="mb-4">@ViewData["Title"]</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card dashboard-card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Сегодняшние приемы</h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.TodayAppointments != null && ViewBag.TodayAppointments.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Время</th>
+                                        <th>Пациент</th>
+                                        <th>Статус</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var appointment in ViewBag.TodayAppointments)
+                                    {
+                                        <tr>
+                                            <td>@appointment.AppointmentDate.ToString("HH:mm")</td>
+                                            <td>@appointment.PatientName</td>
+                                            <td>
+                                                @if (appointment.Status == "SCHEDULED")
+                                                {
+                                                    <span class="badge bg-primary">Запланирован</span>
+                                                }
+                                                else if (appointment.Status == "COMPLETED")
+                                                {
+                                                    <span class="badge bg-success">Завершен</span>
+                                                }
+                                                else if (appointment.Status == "CANCELLED")
+                                                {
+                                                    <span class="badge bg-danger">Отменен</span>
+                                                }
+                                                else if (appointment.Status == "RESCHEDULED")
+                                                {
+                                                    <span class="badge bg-warning">Перенесен</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (appointment.Status == "SCHEDULED" || appointment.Status == "RESCHEDULED")
+                                                {
+                                                    <div class="btn-group btn-group-sm" role="group">
+                                                        <form asp-controller="Home" asp-action="Update" method="post" class="d-inline">
+                                                            <input type="hidden" name="id" value="@appointment.AppointmentId" />
+                                                            <input type="hidden" name="status" value="COMPLETED" />
+                                                            <button type="submit" class="btn btn-success btn-sm" 
+                                                                    title="Отметить как завершенный"
+                                                                    onclick="return confirm('Отметить прием как завершенный?')">
+                                                                <i class="fas fa-check"></i>
+                                                            </button>
+                                                        </form>
+                                                        <form asp-controller="Home" asp-action="Update" method="post" class="d-inline">
+                                                            <input type="hidden" name="id" value="@appointment.AppointmentId" />
+                                                            <input type="hidden" name="status" value="CANCELLED" />
+                                                            <button type="submit" class="btn btn-danger btn-sm" 
+                                                                    title="Отменить прием"
+                                                                    onclick="return confirm('Вы уверены, что хотите отменить прием?')">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                }
+                                                else if (appointment.Status == "COMPLETED")
+                                                {
+                                                    <span class="text-muted small">Завершен</span>
+                                                }
+                                                else if (appointment.Status == "CANCELLED")
+                                                {
+                                                    <span class="text-muted small">Отменен</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">На сегодня приемов нет.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card dashboard-card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Быстрые действия</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-controller="MedicalRecord" asp-action="Create" class="btn btn-primary mb-2">
+                            <i class="fas fa-file-medical">Создать мед. запись</i>
+                        </a>
+                        <a asp-controller="Patient" asp-action="Index" class="btn btn-success mb-2">
+                            <i class="fas fa-flask">Список пациентов</i>
+                        </a>
+                        <a asp-controller="MedicalRecord" asp-action="Index" class="btn btn-info mb-2">
+                            <i class="fas fa-history">Медицинские записи</i>
+                        </a>
+                        <a asp-controller="TestResult" asp-action="Index" class="btn btn-warning mb-2">
+                            <i class="fas fa-chart-line">Результаты анализов</i> 
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mb-4">
+            <div class="card dashboard-card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Ближайшие приемы</h5>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.UpcomingAppointments != null && ViewBag.UpcomingAppointments.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Дата</th>
+                                        <th>Время</th>
+                                        <th>Пациент</th>
+                                        <th>Телефон</th>
+                                        <th>Статус</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var appointment in ViewBag.UpcomingAppointments)
+                                    {
+                                        <tr>
+                                            <td>@appointment.AppointmentDate.ToString("dd.MM.yyyy")</td>
+                                            <td>@appointment.AppointmentDate.ToString("HH:mm")</td>
+                                            <td>@appointment.PatientName</td>
+                                            <td>@appointment.Phone</td>
+                                            <td>
+                                                @if (appointment.Status == "SCHEDULED")
+                                                {
+                                                    <span class="badge bg-primary">Запланирован</span>
+                                                }
+                                                else if (appointment.Status == "COMPLETED")
+                                                {
+                                                    <span class="badge bg-success">Завершен</span>
+                                                }
+                                                else if (appointment.Status == "CANCELLED")
+                                                {
+                                                    <span class="badge bg-danger">Отменен</span>
+                                                }
+                                                else if (appointment.Status == "RESCHEDULED")
+                                                {
+                                                    <span class="badge bg-warning">Перенесен</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (appointment.Status == "SCHEDULED" || appointment.Status == "RESCHEDULED")
+                                                {
+                                                    <form asp-controller="Home" asp-action="Update" method="post" class="d-inline">
+                                                        <input type="hidden" name="id" value="@appointment.AppointmentId" />
+                                                        <input type="hidden" name="status" value="CANCELLED" />
+                                                        <button type="submit" class="btn btn-danger btn-sm" 
+                                                                title="Отменить прием"
+                                                                onclick="return confirm('Вы уверены, что хотите отменить прием?')">
+                                                            <i class="fas fa-times"></i> Отменить
+                                                        </button>
+                                                    </form>
+                                                }
+                                                else if (appointment.Status == "COMPLETED")
+                                                {
+                                                    <span class="text-muted small">Завершен</span>
+                                                }
+                                                else if (appointment.Status == "CANCELLED")
+                                                {
+                                                    <span class="text-muted small">Отменен</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Ближайших приемов нет.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[SELECT *
+          FROM app_users
+          WHERE doctor_id = 1;]]></sql>
+		<connection><![CDATA[clinic_Admin]]></connection>
+		<timestamp><![CDATA[1765378592511]]></timestamp>
+		<type><![CDATA[SQL]]></type>
+		<executed><![CDATA[1]]></executed>
+		<execTime><![CDATA[0.0]]></execTime>
+	</historyItem>
+</history>

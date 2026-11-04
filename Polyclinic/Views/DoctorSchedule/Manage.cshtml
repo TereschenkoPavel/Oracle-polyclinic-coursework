@@ -1,0 +1,395 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Security.Claims;
+@using Clinic.Models;
+@model DoctorScheduleViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = $"Расписание врача";
+}
+
+<style>
+    .days-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .day-checkbox-wrapper {
+        text-align: center;
+    }
+
+    .day-checkbox:checked + .day-label {
+        background-color: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+    }
+
+    .day-label {
+        width: 80px;
+        height: 70px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+
+    .day-label:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .day-short {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .day-full {
+        font-size: 0.8rem;
+        margin-top: 4px;
+    }
+
+    .list-group-item {
+        border-left: 4px solid #0d6efd;
+    }
+</style>
+
+<h1>
+    @ViewData["Title"]
+    @if (Model.DoctorInfo != null && !string.IsNullOrEmpty(Model.DoctorInfo.FullName))
+    {
+        <small class="text-muted">- @Model.DoctorInfo.FullName</small>
+    }
+</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-calendar-alt"></i>
+                    @if (User.IsInRole("HEAD_DOCTOR"))
+                    {
+                        <span>Управление расписанием</span>
+                    }
+                    else
+                    {
+                        <span>Мое расписание</span>
+                    }
+                </h5>
+            </div>
+            <div class="card-body">
+
+                <form asp-action="Save" method="post" id="scheduleForm">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input type="hidden" asp-for="ScheduleInput.DoctorId" value="@Model.DoctorInfo.DoctorId" />
+
+                    <!-- Дни недели - чекбоксы в ряд -->
+                    <div class="form-group mb-4">
+                        <label class="control-label">Дни недели:</label>
+                        
+                        <div class="days-container row g-2 mb-3">
+                            @foreach (var day in Model.ScheduleInput.AvailableDays)
+                            {
+                                var inputId = $"day_{day.DayNumber}";
+                                
+                                <div class="col-auto">
+                                    <div class="day-checkbox-wrapper">
+                                        <input type="checkbox" 
+                                               id="@inputId"
+                                               name="ScheduleInput.SelectedDays"
+                                               value="@day.DayNumber"
+                                               class="btn-check day-checkbox"
+                                               autocomplete="off"
+                                               @(day.IsSelected ? "checked" : "") />
+                                        <label class="btn btn-outline-primary day-label" for="@inputId">
+                                            <div class="day-short">@day.ShortName</div>
+                                            <div class="day-full">@day.DayName</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        
+                        <span asp-validation-for="ScheduleInput.SelectedDays" class="text-danger"></span>
+                        <div id="selectedDaysError" class="text-danger" style="display: none;">
+                            <i class="fas fa-exclamation-circle"></i> Выберите хотя бы один день недели
+                        </div>
+                    </div>
+
+                    <!-- Время работы -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="ScheduleInput.StartTime" class="control-label"></label>
+                                <input asp-for="ScheduleInput.StartTime" type="time" class="form-control" 
+                                       value="@Model.ScheduleInput.StartTime.ToString(@"hh\:mm")" required />
+                                <span asp-validation-for="ScheduleInput.StartTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="ScheduleInput.EndTime" class="control-label"></label>
+                                <input asp-for="ScheduleInput.EndTime" type="time" class="form-control" 
+                                       value="@Model.ScheduleInput.EndTime.ToString(@"hh\:mm")" required />
+                                <span asp-validation-for="ScheduleInput.EndTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Предупреждение о времени -->
+                    <div class="alert alert-warning" id="timeWarning" style="display: none;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span id="timeWarningText"></span>
+                    </div>
+
+                    @if (User.IsInRole("HEAD_DOCTOR"))
+                    {
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary" id="saveButton">
+                                <i class="fas fa-save"></i> Сохранить расписание
+                            </button>
+                            
+                            @if (Model.ShowDeleteAllButton)
+                            {
+                                <button type="button" class="btn btn-danger" id="deleteAllButton" 
+                                        data-doctor-id="@Model.DoctorInfo.DoctorId"
+                                        data-doctor-name="@Model.DoctorInfo.FullName">
+                                    <i class="fas fa-trash"></i> Удалить все расписание
+                                </button>
+                            }
+                            
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Назад к списку
+                            </a>
+                        </div>
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <!-- Существующее расписание -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Текущее расписание</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.HasExistingSchedules)
+                {
+                    <div class="list-group">
+                        @foreach (var schedule in Model.ExistingSchedules.OrderBy(s => s.DayOfWeek))
+                        {
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@schedule.DayName</strong>
+                                        <div class="text-muted">
+                                            @schedule.TimeRange
+                                        </div>
+                                    </div>
+                                    <span class="badge bg-primary">
+                                        @schedule.Duration
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    
+                    <div class="mt-3 text-center">
+                        <small class="text-muted">
+                            Всего дней: <strong>@Model.ExistingSchedules.Count</strong>
+                        </small>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning mb-0">
+                        <i class="fas fa-calendar-times"></i>
+                        Расписание не настроено
+                    </div>
+                }
+            </div>
+        </div>
+        
+        <!-- Информация о враче -->
+        @if (!string.IsNullOrEmpty(Model.DoctorInfo.OfficeNumber) || !string.IsNullOrEmpty(Model.DoctorInfo.Phone))
+        {
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Информация о враче</h5>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.DoctorInfo.OfficeNumber))
+                    {
+                        <p><strong>Кабинет:</strong> @Model.DoctorInfo.OfficeNumber</p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.DoctorInfo.Phone))
+                    {
+                        <p><strong>Телефон:</strong> @Model.DoctorInfo.Phone</p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.DoctorInfo.Specialty))
+                    {
+                        <p><strong>Специальность:</strong> @Model.DoctorInfo.Specialty</p>
+                    }
+                </div>
+            </div>
+        }
+        
+        <!-- Общая информация -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Информация</h5>
+            </div>
+            <div class="card-body">
+                <ul class="mb-0">
+                    <li>Расписание используется для записи пациентов</li>
+                    <li>Время указывается в 24-часовом формате</li>
+                    <li>Минимальная длительность смены - 1 час</li>
+                    <li>Время окончания должно быть позже времени начала</li>
+                </ul>
+                
+                <hr>
+                
+                <div class="alert alert-warning">
+                    <small>
+                        <i class="fas fa-exclamation-triangle"></i>
+                        При удалении всего расписания система проверит наличие будущих записей.
+                        Если есть будущие записи, удаление будет отменено.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        $(document).ready(function() {
+            // Валидация формы
+            $('#scheduleForm').on('submit', function(e) {
+                // Проверяем, что выбран хотя бы один день
+                var checkedDays = $('.day-checkbox:checked').length;
+                if (checkedDays === 0) {
+                    e.preventDefault();
+                    $('#selectedDaysError').show();
+                    return false;
+                } else {
+                    $('#selectedDaysError').hide();
+                }
+                
+                // Проверяем время
+                var startTime = $('#ScheduleInput_StartTime').val();
+                var endTime = $('#ScheduleInput_EndTime').val();
+                
+                if (startTime && endTime) {
+                    var start = new Date('2000-01-01T' + startTime + ':00');
+                    var end = new Date('2000-01-01T' + endTime + ':00');
+                    
+                    if (end <= start) {
+                        e.preventDefault();
+                        showTimeWarning('Время окончания должно быть позже времени начала');
+                        return false;
+                    }
+                    
+                    // Проверяем минимальную продолжительность (1 час)
+                    var diff = (end - start) / (1000 * 60);
+                    if (diff < 60) {
+                        e.preventDefault();
+                        showTimeWarning('Минимальная продолжительность рабочего дня - 1 час');
+                        return false;
+                    }
+                    
+                    // Проверяем максимальную продолжительность (12 часов)
+                    if (diff > 12 * 60) {
+                        e.preventDefault();
+                        showTimeWarning('Максимальная продолжительность рабочего дня - 12 часов');
+                        return false;
+                    }
+                }
+                
+                // Блокируем кнопку сохранения
+                $('#saveButton').prop('disabled', true).html(
+                    '<span class="spinner-border spinner-border-sm"></span> Сохранение...'
+                );
+                
+                return true;
+            });
+            
+            // Проверка времени при изменении
+            $('#ScheduleInput_StartTime, #ScheduleInput_EndTime').on('change', validateTime);
+            
+            // Кнопка удаления всего расписания
+            $('#deleteAllButton').on('click', function() {
+                var doctorId = $(this).data('doctor-id');
+                var doctorName = $(this).data('doctor-name');
+                
+                if (confirm(`Вы уверены, что хотите удалить ВСЁ расписание врача "${doctorName}"?\n\nПримечание: Если у врача есть будущие записи, удаление будет отменено.`)) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteAll", "DoctorSchedule")',
+                        type: 'POST',
+                        data: {
+                            doctorId: doctorId,
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function(response) {
+                            window.location.reload();
+                        },
+                        error: function(xhr) {
+                            alert('Произошла ошибка при отправке запроса: ' + xhr.responseText);
+                        }
+                    });
+                }
+            });
+            
+            function validateTime() {
+                var startTime = $('#ScheduleInput_StartTime').val();
+                var endTime = $('#ScheduleInput_EndTime').val();
+                var warning = $('#timeWarning');
+                var warningText = $('#timeWarningText');
+                
+                if (startTime && endTime) {
+                    var start = new Date('2000-01-01T' + startTime + ':00');
+                    var end = new Date('2000-01-01T' + endTime + ':00');
+                    
+                    if (end <= start) {
+                        showTimeWarning('Время окончания должно быть позже времени начала');
+                        return false;
+                    }
+                    
+                    var diff = (end - start) / (1000 * 60);
+                    
+                    if (diff < 60) {
+                        showTimeWarning('Минимальная продолжительность рабочего дня - 1 час');
+                        return false;
+                    }
+                    
+                    if (diff > 12 * 60) {
+                        showTimeWarning('Максимальная продолжительность рабочего дня - 12 часов');
+                        return false;
+                    }
+                    
+                    warning.hide();
+                    return true;
+                }
+                
+                warning.hide();
+                return false;
+            }
+            
+            function showTimeWarning(message) {
+                $('#timeWarningText').text(message);
+                $('#timeWarning').show();
+            }
+            
+            validateTime();
+        });
+    </script>
+}

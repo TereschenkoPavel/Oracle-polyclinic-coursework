@@ -1,0 +1,75 @@
+﻿@using Clinic.Models;
+@model DoctorModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Удалить врача";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h3>@ViewData["Title"]</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Внимание!</h4>
+                    <p>Вы уверены, что хотите удалить этого врача? Это действие нельзя отменить.</p>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5>Информация о враче</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">ID:</dt>
+                                    <dd class="col-sm-8">@Model.DoctorId</dd>
+
+                                    <dt class="col-sm-4">Фамилия:</dt>
+                                    <dd class="col-sm-8">@Model.LastName</dd>
+
+                                    <dt class="col-sm-4">Имя:</dt>
+                                    <dd class="col-sm-8">@Model.FirstName</dd>
+
+                                    <dt class="col-sm-4">Отчество:</dt>
+                                    <dd class="col-sm-8">@Model.MiddleName</dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Специальность:</dt>
+                                    <dd class="col-sm-8">@Model.SpecialtyName</dd>
+
+                                    <dt class="col-sm-4">Кабинет:</dt>
+                                    <dd class="col-sm-8">@Model.OfficeNumber</dd>
+
+                                    <dt class="col-sm-4">Телефон:</dt>
+                                    <dd class="col-sm-8">@Model.Phone</dd>
+
+                                    <dt class="col-sm-4">Паспорт:</dt>
+                                    <dd class="col-sm-8">@Model.PassportSeriesNumber</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="DoctorId" />
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Удалить
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Отмена
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

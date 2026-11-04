@@ -1,0 +1,84 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Clinic.Models
+@model DoctorScheduleViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Управление расписанием врачей";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Выберите врача</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Manage" method="get" id="selectDoctorForm">
+                    <div class="form-group mb-3">
+                        <label for="doctorId" class="form-label">Врач:</label>
+                        <select name="doctorId" class="form-control" id="doctorSelect" required>
+                            <option value="">Выберите врача</option>
+                            @foreach (var doctor in (List<DoctorOption>)ViewBag.Doctors)
+                            {
+                                <option value="@doctor.DoctorId">@doctor.FullName (@doctor.Specialty)</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-calendar-alt"></i> Управлять расписанием
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Информация</h5>
+            </div>
+            <div class="card-body">
+                <p>На этой странице вы можете:</p>
+                <ul>
+                    @if (User.IsInRole("HEAD_DOCTOR"))
+                    {
+                        <li>Управлять расписанием любого врача</li>
+                        <li>Добавлять/изменять рабочие дни</li>
+                        <li>Удалять все расписание врача</li>
+                    }
+                    @if (User.IsInRole("DOCTOR"))
+                    {
+                        <li>Просматривать свое расписание</li>
+                        <li>Видеть свои рабочие часы</li>
+                    }
+                </ul>
+
+                <div class="alert alert-warning">
+                    <small>
+                        <i class="fas fa-exclamation-triangle"></i>
+                        При удалении расписания проверяется наличие будущих записей.
+                        Если есть будущие записи, удаление будет отменено.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#doctorSelect').select2({
+                placeholder: "Выберите врача",
+                allowClear: true
+            });
+        });
+    </script>
+}

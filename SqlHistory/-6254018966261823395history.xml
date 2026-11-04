@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[select * from appointments where doctor_id = 1]]></sql>
+		<connection><![CDATA[clinic_Admin]]></connection>
+		<timestamp><![CDATA[1765961058126]]></timestamp>
+		<type><![CDATA[SQL]]></type>
+		<executed><![CDATA[1]]></executed>
+		<execTime><![CDATA[0.094]]></execTime>
+	</historyItem>
+</history>

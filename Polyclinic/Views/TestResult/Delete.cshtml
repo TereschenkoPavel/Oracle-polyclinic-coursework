@@ -1,0 +1,78 @@
+﻿@using Clinic.Models;
+@model TestResultModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Удалить результат анализа";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h3>@ViewData["Title"]</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Внимание!</h4>
+                    <p>Вы уверены, что хотите удалить этот результат анализа? Это действие нельзя отменить.</p>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5>Информация о результате анализа</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">ID результата:</dt>
+                                    <dd class="col-sm-8">@Model.ResultId</dd>
+
+                                    <dt class="col-sm-4">ID пациента:</dt>
+                                    <dd class="col-sm-8">@Model.PatientId</dd>
+
+                                    @if (!string.IsNullOrEmpty(Model.PatientFullName))
+                                    {
+                                            <dt class="col-sm-4">ФИО пациента:</dt>
+                                            <dd class="col-sm-8">@Model.PatientFullName</dd>
+                                    }
+
+                                    <dt class="col-sm-4">Тип анализа:</dt>
+                                    <dd class="col-sm-8">@Model.TestType</dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Дата анализа:</dt>
+                                    <dd class="col-sm-8">@Model.TestDate.ToString("dd.MM.yyyy")</dd>
+
+                                    <dt class="col-sm-4">Дата результата:</dt>
+                                    <dd class="col-sm-8">@Model.ResultDate.ToString("dd.MM.yyyy")</dd>
+
+                                    <dt class="col-sm-4">Результат:</dt>
+                                    <dd class="col-sm-8">@Model.ResultValue</dd>
+
+                                    <dt class="col-sm-4">Нормальные значения:</dt>
+                                    <dd class="col-sm-8">@Model.NormalRange</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="ResultId" />
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Удалить
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Отмена
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

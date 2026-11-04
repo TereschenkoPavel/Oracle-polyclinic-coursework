@@ -1,0 +1,12 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[select * from doctors d join doctor_schedules s
+    on d.DOCTOR_ID = s.doctor_id;]]></sql>
+		<connection><![CDATA[clinic_Admin]]></connection>
+		<timestamp><![CDATA[1765826520738]]></timestamp>
+		<type><![CDATA[SQL]]></type>
+		<executed><![CDATA[3]]></executed>
+		<execTime><![CDATA[0.0]]></execTime>
+	</historyItem>
+</history>

@@ -1,0 +1,158 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Clinic.Models;
+@model PatientModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Карта пациента";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Основная информация</h4>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">@Model.LastName @Model.FirstName @Model.MiddleName</h3>
+                <hr>
+
+                <div class="mb-3">
+                    <h6>Персональные данные:</h6>
+                    <p><strong>Дата рождения:</strong> @Model.BirthDate.ToString("dd.MM.yyyy")</p>
+                    <p><strong>Возраст:</strong> @((DateTime.Now.Year - Model.BirthDate.Year)) лет</p>
+                    <p><strong>Пол:</strong> @(Model.Gender == "M" ? "Мужской" : "Женский")</p>
+                </div>
+
+                <div class="mb-3">
+                    <h6>Контактная информация:</h6>
+                    <p><strong>Телефон:</strong> @Model.Phone</p>
+                    <p><strong>Адрес:</strong> @Model.Address</p>
+                </div>
+
+                <div class="mb-3">
+                    <h6>Документы:</h6>
+                    <p><strong>Паспорт:</strong> @Model.PassportSeriesNumber</p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Index" class="btn btn-secondary">Назад к списку</a>
+                @if (User.IsInRole("HEAD_DOCTOR"))
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.PatientId" class="btn btn-warning">Редактировать</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">Ближайшие приемы</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (ViewBag.UpcomingAppointments != null && ViewBag.UpcomingAppointments.Count > 0)
+                        {
+                            <div class="list-group">
+                                @foreach (var appointment in ViewBag.UpcomingAppointments)
+                                {
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">@appointment.AppointmentDate.ToString("dd.MM.yyyy HH:mm")</h6>
+                                            @if (@appointment.Status == "SCHEDULED")
+                                            {
+                                                <span class="badge bg-primary">Запланирован</span>
+                                            }
+                                            else if (@appointment.Status == "COMPLETED")
+                                            {
+                                                <span class="badge bg-success">Завершен</span>
+                                            }
+                                            else if (@appointment.Status == "CANCELLED")
+                                            {
+                                                <span class="badge bg-danger">Отменен</span>
+                                            }
+                                            else if (@appointment.Status == "RESCHEDULED")
+                                            {
+                                                <span class="badge bg-warning">Перенесен</span>
+                                            }
+                                        </div>
+                                        <p class="mb-1">@appointment.DoctorName</p>
+                                        <small>Кабинет: @appointment.OfficeNumber</small>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">Нет запланированных приемов</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Медицинские записи</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (ViewBag.MedicalRecords != null && ViewBag.MedicalRecords.Count > 0)
+                        {
+                            <div class="list-group">
+                                @foreach (var record in ViewBag.MedicalRecords)
+                                {
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">@record.RecordDate.ToString("dd.MM.yyyy")</h6>
+                                            <span class="badge bg-danger">@record.Diagnosis</span>
+                                        </div>
+                                        <p class="mb-1">@record.DoctorName</p>
+                                        <small>@record.Prescription</small>
+                                        <small>@record.Notes</small>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted">Медицинские записи отсутствуют</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">Быстрые действия</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="btn-group" role="group">
+                            @if (User.IsInRole("HEAD_DOCTOR") || User.IsInRole("REGISTRAR"))
+                            {
+
+                            <a asp-controller="Appointment" asp-action="Create" asp-route-patientId="@Model.PatientId"
+                               class="btn btn-primary">
+                                <i class="fas fa-calendar-plus"></i> Записать на прием
+                            </a>
+                            }
+                            @if (User.IsInRole("DOCTOR") || User.IsInRole("HEAD_DOCTOR"))
+                            {
+                                <a asp-controller="MedicalRecord" asp-action="Create" asp-route-patientId="@Model.PatientId"
+                                   class="btn btn-success">
+                                    <i class="fas fa-file-medical"></i> Создать мед. запись
+                                </a>
+                                <a asp-controller="TestResult" asp-action="Create" asp-route-patientId="@Model.PatientId"
+                                   class="btn btn-info">
+                                    <i class="fas fa-flask"></i> Добавить анализ
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

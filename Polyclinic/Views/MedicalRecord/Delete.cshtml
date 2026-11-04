@@ -1,0 +1,81 @@
+﻿﻿@using Clinic.Models;
+@model MedicalRecordModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Удаление медицинской записи";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h3>@ViewData["Title"]</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Внимание!</h4>
+                    <p>Вы уверены, что хотите удалить эту медицинскую запись? Это действие нельзя отменить.</p>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5>Информация о медицинской записи</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">ID записи:</dt>
+                                    <dd class="col-sm-8">@Model.RecordId</dd>
+
+                                    <dt class="col-sm-4">Дата создания:</dt>
+                                    <dd class="col-sm-8">@Model.RecordDate.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                                    <dt class="col-sm-4">Пациент:</dt>
+                                    <dd class="col-sm-8">@Model.PatientName</dd>
+                                    <dd class="col-sm-8 offset-sm-4">
+                                        <small class="text-muted">ID: @Model.PatientId</small>
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Врач:</dt>
+                                    <dd class="col-sm-8">@Model.DoctorName</dd>
+                                    <dd class="col-sm-8 offset-sm-4">
+                                        <small class="text-muted">ID: @Model.DoctorId</small>
+                                    </dd>
+
+                                    <dt class="col-sm-4">Диагноз:</dt>
+                                    <dd class="col-sm-8">
+                                        @if (!string.IsNullOrEmpty(Model.Diagnosis))
+                                        {
+                                            <span class="badge bg-danger">@Model.Diagnosis</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">не указан</span>
+                                        }
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="RecordId" />
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Удалить
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Отмена
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

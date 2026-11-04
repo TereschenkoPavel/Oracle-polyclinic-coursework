@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[file:/C:/Users/pavel/Desktop/Lab7.sql]]></sql>
+		<connection><![CDATA[TPA]]></connection>
+		<timestamp><![CDATA[1765865737797]]></timestamp>
+		<type><![CDATA[Script]]></type>
+		<executed><![CDATA[32]]></executed>
+		<execTime><![CDATA[0.0]]></execTime>
+	</historyItem>
+</history>

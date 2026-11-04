@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[SELECT * FROM ALL_SEQUENCES WHERE SEQUENCE_OWNER = 'TPA';]]></sql>
+		<connection><![CDATA[TPA]]></connection>
+		<timestamp><![CDATA[1764613684856]]></timestamp>
+		<type><![CDATA[SQL]]></type>
+		<executed><![CDATA[1]]></executed>
+		<execTime><![CDATA[0.097]]></execTime>
+	</historyItem>
+</history>

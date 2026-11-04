@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[file:/C:/Users/pavel/AppData/Roaming/SQL Developer/Appointment_demonstration.sql]]></sql>
+		<connection><![CDATA[app_reg]]></connection>
+		<timestamp><![CDATA[1765917477511]]></timestamp>
+		<type><![CDATA[Script]]></type>
+		<executed><![CDATA[14]]></executed>
+		<execTime><![CDATA[0.0]]></execTime>
+	</historyItem>
+</history>

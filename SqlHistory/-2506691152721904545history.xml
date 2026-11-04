@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[select * from dba_roles where role like '%TPA%';]]></sql>
+		<connection><![CDATA[TPA_Conn]]></connection>
+		<timestamp><![CDATA[1761628022983]]></timestamp>
+		<type><![CDATA[SQL]]></type>
+		<executed><![CDATA[10]]></executed>
+		<execTime><![CDATA[0.09]]></execTime>
+	</historyItem>
+</history>

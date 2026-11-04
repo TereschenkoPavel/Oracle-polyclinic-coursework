@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[SELECT 'DROP ROLE ' || ROLE AS cmd from dba_roles where COMMON = 'NO']]></sql>
+		<connection><![CDATA[clinic_Admin]]></connection>
+		<timestamp><![CDATA[1764863800301]]></timestamp>
+		<type><![CDATA[SQL]]></type>
+		<executed><![CDATA[1]]></executed>
+		<execTime><![CDATA[0.0]]></execTime>
+	</historyItem>
+</history>

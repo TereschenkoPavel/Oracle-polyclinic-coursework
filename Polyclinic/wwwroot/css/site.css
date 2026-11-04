@@ -1,0 +1,289 @@
+/* clinic-theme.css - Стили для медицинской системы */
+
+:root {
+    --clinic-primary: #2a5c8f;
+    --clinic-secondary: #4a90e2;
+    --clinic-success: #28a745;
+    --clinic-info: #17a2b8;
+    --clinic-warning: #ffc107;
+    --clinic-danger: #dc3545;
+    --clinic-light: #f8f9fa;
+    --clinic-dark: #343a40;
+    --clinic-teal: #20c997;
+    --clinic-purple: #6f42c1;
+}
+
+/* Основные стили */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+/* Навигация */
+.navbar {
+    background: linear-gradient(135deg, var(--clinic-primary) 0%, #1a3a5f 100%);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+    .navbar-brand i {
+        color: #fff;
+        margin-right: 10px;
+    }
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+    .nav-link:hover {
+        color: #fff !important;
+        transform: translateY(-2px);
+    }
+
+/* Карточки */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+.card-header {
+    background: linear-gradient(135deg, var(--clinic-primary), var(--clinic-secondary));
+    color: white;
+    border-bottom: none;
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+}
+
+/* Кнопки */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--clinic-primary), var(--clinic-secondary));
+    border: none;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--clinic-success), #20c997);
+    border: none;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, var(--clinic-warning), #fd7e14);
+    border: none;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--clinic-danger), #e83e8c);
+    border: none;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Таблицы */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+    .table th {
+        background-color: #f1f5fd;
+        font-weight: 600;
+        color: var(--clinic-primary);
+        border-top: 1px solid #dee2e6;
+    }
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(42, 92, 143, 0.03);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(42, 92, 143, 0.08);
+    transition: background-color 0.2s ease;
+}
+
+/* Badges */
+.badge {
+    padding: 0.5em 1em;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+    .badge.bg-primary {
+        background: linear-gradient(135deg, var(--clinic-primary), var(--clinic-secondary)) !important;
+    }
+
+    .badge.bg-success {
+        background: linear-gradient(135deg, var(--clinic-success), #20c997) !important;
+    }
+
+    .badge.bg-warning {
+        background: linear-gradient(135deg, var(--clinic-warning), #fd7e14) !important;
+    }
+
+    .badge.bg-danger {
+        background: linear-gradient(135deg, var(--clinic-danger), #e83e8c) !important;
+    }
+
+    .badge.bg-info {
+        background: linear-gradient(135deg, var(--clinic-info), #17a2b8) !important;
+    }
+
+/* Формы */
+.form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+    .form-control:focus {
+        border-color: var(--clinic-secondary);
+        box-shadow: 0 0 0 0.25rem rgba(42, 92, 143, 0.25);
+    }
+
+.form-label {
+    font-weight: 500;
+    color: var(--clinic-primary);
+    margin-bottom: 0.5rem;
+}
+
+/* Alert */
+.alert {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: #155724;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+    color: #721c24;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+    color: #0c5460;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+    border-left: 4px solid var(--clinic-primary);
+}
+
+    .dashboard-card .card-header {
+        background: white;
+        color: var(--clinic-primary);
+        border-bottom: 1px solid #e9ecef;
+    }
+
+/* Медицинская тематика */
+.medical-icon {
+    background: linear-gradient(135deg, var(--clinic-primary), var(--clinic-secondary));
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+/* Footer */
+footer {
+    background: linear-gradient(135deg, #2c3e50, #4a6572);
+    color: white;
+    margin-top: 3rem;
+}
+
+/* Анимации */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Специальные стили для медицинских элементов */
+.medical-record {
+    background: linear-gradient(135deg, #fff, #f8fdff);
+    border-left: 4px solid var(--clinic-info);
+}
+
+.test-result {
+    background: linear-gradient(135deg, #fff, #fff8f8);
+    border-left: 4px solid var(--clinic-warning);
+}
+
+.appointment-card {
+    background: linear-gradient(135deg, #fff, #f8fff8);
+    border-left: 4px solid var(--clinic-success);
+}
+
+/* Градиенты статусов */
+.status-scheduled {
+    background: linear-gradient(135deg, #007bff, #4a90e2);
+}
+
+.status-completed {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.status-cancelled {
+    background: linear-gradient(135deg, #dc3545, #e83e8c);
+}
+
+.status-pending {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+}

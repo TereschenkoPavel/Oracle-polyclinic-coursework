@@ -1,0 +1,11 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[select * from all_tables where TABLE_NAME = 'a';]]></sql>
+		<connection><![CDATA[cdb_cdv]]></connection>
+		<timestamp><![CDATA[1762237011540]]></timestamp>
+		<type><![CDATA[SQL]]></type>
+		<executed><![CDATA[1]]></executed>
+		<execTime><![CDATA[0.06]]></execTime>
+	</historyItem>
+</history>

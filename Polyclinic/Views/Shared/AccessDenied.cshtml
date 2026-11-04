@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Доступ запрещен";
+    Layout = "_Layout";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h1 class="text-danger">Доступ запрещен</h1>
+            <p class="lead">У вас нет прав для выполнения этого действия.</p>
+            <p>Требуемые роли: HEAD_DOCTOR или DOCTOR</p>
+
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <p>Ваша роль: @User.FindFirst("Role")?.Value</p>
+            }
+
+            <a asp-controller="Home" asp-action="Dashboard" class="btn btn-primary mt-3">
+                Вернуться в панель управления
+            </a>
+        </div>
+    </div>
+</div>

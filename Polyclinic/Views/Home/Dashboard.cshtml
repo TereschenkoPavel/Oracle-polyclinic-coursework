@@ -1,0 +1,51 @@
+﻿
+@using System.Security.Claims
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Панель управления";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<h1>Панель управления</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                Информация о пользователе
+            </div>
+            <div class="card-body">
+                <p><strong>Логин:</strong> @User.Identity.Name</p>
+                <p><strong>Роль:</strong> @ViewBag.Role</p>
+                <p><strong>Доктор ID:</strong> @User.FindFirstValue("DoctorId")</p>
+            </div>
+        </div>
+    </div>
+
+    @if (ViewBag.Role == "HEAD_DOCTOR")
+    {
+        <div class="mt-4">
+            <a asp-controller="Doctor" asp-action="Index" class="btn btn-primary">Управление врачами</a>
+            <a asp-controller="DoctorSchedule" asp-action="Index" class="btn btn-info">Расписание врачей</a>
+            <a asp-controller="Patient" asp-action="Index" class="btn btn-success">Управление пациентами</a>
+            <a asp-controller="Appointment" asp-action="Create" class="btn btn-warning">Создать запись</a>
+        </div>
+    }
+
+    @if (ViewBag.Role == "DOCTOR")
+    {
+        <div class="mt-4">
+            <a asp-controller="DoctorSchedule" asp-action="Index" class="btn btn-primary">Мое расписание</a>
+            <a asp-controller="MedicalRecord" asp-action="Create" class="btn btn-success">Создать мед. запись</a>
+            <a asp-controller="TestResult" asp-action="Create" class="btn btn-info">Добавить анализ</a>
+        </div>
+    }
+</div>
+
+@if (ViewBag.Role == "REGISTRAR")
+{
+    <div class="mt-4">
+        <a asp-controller="Patient" asp-action="Index" class="btn btn-primary">Управление пациентами</a>
+        <a asp-controller="Appointment" asp-action="Create" class="btn btn-success">Создать запись</a>
+    </div>
+}

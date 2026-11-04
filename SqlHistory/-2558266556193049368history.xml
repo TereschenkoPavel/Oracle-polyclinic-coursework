@@ -1,0 +1,13 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[select tablespace_name
+from   dba_data_files
+where  file_name = 'K:\DATABASE\TPA_PDB\TPA_PDB_TS.dbf';]]></sql>
+		<connection><![CDATA[TPA_Conn]]></connection>
+		<timestamp><![CDATA[1761584046175]]></timestamp>
+		<type><![CDATA[SQL]]></type>
+		<executed><![CDATA[1]]></executed>
+		<execTime><![CDATA[0.062]]></execTime>
+	</historyItem>
+</history>

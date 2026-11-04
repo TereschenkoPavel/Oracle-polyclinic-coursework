@@ -1,0 +1,106 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Clinic.Models;
+@model PatientModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Удалить пациента";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h3>@ViewData["Title"]</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Внимание!</h4>
+                    <p>Вы уверены, что хотите удалить этого пациента? Это действие нельзя отменить.</p>
+                </div>
+
+                @if (ViewBag.HasAppointments || ViewBag.HasMedicalRecords || ViewBag.HasTestResults)
+                {
+                    <div class="alert alert-warning">
+                        <h5><i class="fas fa-exclamation-circle"></i> Найдены связанные записи:</h5>
+                        <ul>
+                            @if (ViewBag.HasAppointments)
+                            {
+                                <li>Приемы - необходимо отменить или перенести все приемы пациента</li>
+                            }
+                            @if (ViewBag.HasMedicalRecords)
+                            {
+                                <li>Медицинские записи - нельзя удалить пациента с медицинскими записями</li>
+                            }
+                            @if (ViewBag.HasTestResults)
+                            {
+                                <li>Результаты анализов - необходимо удалить все результаты анализов пациента</li>
+                            }
+                        </ul>
+                        <p class="mb-0"><strong>Сначала удалите все связанные записи или отмените приемы.</strong></p>
+                    </div>
+                }
+
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5>Информация о пациенте</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">ID пациента:</dt>
+                                    <dd class="col-sm-8">@Model.PatientId</dd>
+
+                                    <dt class="col-sm-4">Фамилия:</dt>
+                                    <dd class="col-sm-8">@Model.LastName</dd>
+
+                                    <dt class="col-sm-4">Имя:</dt>
+                                    <dd class="col-sm-8">@Model.FirstName</dd>
+
+                                    <dt class="col-sm-4">Отчество:</dt>
+                                    <dd class="col-sm-8">@Model.MiddleName</dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Дата рождения:</dt>
+                                    <dd class="col-sm-8">@Model.BirthDate.ToString("dd.MM.yyyy")</dd>
+
+                                    <dt class="col-sm-4">Пол:</dt>
+                                    <dd class="col-sm-8">@(Model.Gender == "M" ? "Мужской" : "Женский")</dd>
+
+                                    <dt class="col-sm-4">Телефон:</dt>
+                                    <dd class="col-sm-8">@Model.Phone</dd>
+
+                                    <dt class="col-sm-4">Паспорт:</dt>
+                                    <dd class="col-sm-8">@Model.PassportSeriesNumber</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="PatientId" />
+                    <div class="form-group">
+                        @if (!ViewBag.HasAppointments && !ViewBag.HasMedicalRecords && !ViewBag.HasTestResults)
+                        {
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Удалить пациента
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-danger" disabled>
+                                <i class="fas fa-ban"></i> Удаление заблокировано
+                            </button>
+                        }
+                        <a asp-action="Details" asp-route-id="@Model.PatientId" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Отмена
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+<?xml version='1.0'  encoding='UTF-8' ?>
+<history>
+	<historyItem>
+		<sql><![CDATA[create table TPA_t(x number(3) unique, s varchar2(50))
+
+INSERT INTO TPA_t VALUES(1,'a');
+INSERT INTO TPA_t VALUES(2,'b');
+INSERT INTO TPA_t VALUES(3,'c');
+commit;
+
+UPDATE TPA_t
+  SET s = 'new b' where s = 'b';
+UPDATE TPA_t
+  SET s = 'new c' where s = 'c';
+commit;
+
+SELECT count(x) FROM TPA_t 
+  where s like 'new%';
+  
+DELETE FROM TPA_t WHERE s = 'a';
+commit;
+
+create table TPA_t1(
+  y number(3),
+  x number(3) references TPA_t(x)
+  );]]></sql>
+		<connection><![CDATA[TPA_Conn]]></connection>
+		<timestamp><![CDATA[1759166312770]]></timestamp>
+		<type><![CDATA[Script]]></type>
+		<executed><![CDATA[1]]></executed>
+		<execTime><![CDATA[0.109]]></execTime>
+	</historyItem>
+</history>

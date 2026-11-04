@@ -1,0 +1,205 @@
+﻿@using Clinic.Models;
+@model AppointmentModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Новая запись на прием";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3>@ViewData["Title"]</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post" id="appointmentForm">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="PatientId" class="control-label">Пациент</label>
+                                <select asp-for="PatientId" class="form-control" required>
+                                    <option value="">Выберите пациента</option>
+                                    @foreach (var patient in Model.Patients)
+                                    {
+                                        <option value="@patient.PatientId">@patient.FullName</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="PatientId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="DoctorId" class="control-label">Врач</label>
+                                <select asp-for="DoctorId" class="form-control" required 
+                                        id="doctorSelect" onchange="loadDoctorSchedule()">
+                                    <option value="">Выберите врача</option>
+                                    @foreach (var doctor in Model.Doctors)
+                                    {
+                                        <option value="@doctor.DoctorId" data-specialty="@doctor.Specialty">
+                                            @doctor.FullName (@doctor.Specialty)
+                                        </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="DoctorId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="control-label">Дата приема</label>
+                                <input type="date" id="appointmentDate" name="appointmentDate" class="form-control" 
+                                       value="@DateTime.Today.ToString("yyyy-MM-dd")" 
+                                       onchange="loadDoctorSchedule()" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="control-label">Время приема</label>
+                                <input type="time" id="appointmentTime" name="appointmentTime" class="form-control" 
+                                       required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Добавляем скрытое поле для полной даты и времени -->
+                    <input type="hidden" asp-for="AppointmentDate" id="fullAppointmentDate" />
+
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Доступные слоты</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="slotsContainer" class="text-center">
+                                <p class="text-muted">Выберите врача и дату для просмотра доступных слотов</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" id="submitButton">
+                            <i class="fas fa-calendar-plus"></i> Записать на прием
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Назад к списку
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    
+    <script>
+        function loadDoctorSchedule() {
+            const doctorId = $('#doctorSelect').val();
+            const date = $('#appointmentDate').val();
+            
+            if (!doctorId || !date) {
+                $('#slotsContainer').html('<p class="text-muted">Выберите врача и дату для просмотра доступных слотов</p>');
+                return;
+            }
+            
+            $('#slotsContainer').html('<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Загрузка...</span></div>');
+            
+            $.ajax({
+                url: '@Url.Action("GetDoctorSchedule", "Appointment")',
+                type: 'GET',
+                data: { 
+                    doctorId: doctorId,
+                    date: date 
+                },
+                success: function(response) {
+                    if (response.success && response.slots.length > 0) {
+                        let html = '<div class="row">';
+                        response.slots.forEach(slot => {
+                            const isAvailable = slot.isAvailable;
+                            const time = slot.time;
+                            const status = slot.status;
+                            const buttonClass = isAvailable ? 'btn-outline-success' : 'btn-outline-secondary disabled';
+                            
+                            html += `
+                                <div class="col-3 mb-2">
+                                    <button type="button" 
+                                            class="btn ${buttonClass} w-100 time-slot-btn"
+                                            data-time="${time}"
+                                            ${isAvailable ? 'onclick="selectTimeSlot(\'' + time + '\')"' : 'disabled'}>
+                                        <div>${time}</div>
+                                        <small class="${isAvailable ? 'text-success' : 'text-danger'}">${status}</small>
+                                    </button>
+                                </div>
+                            `;
+                        });
+                        html += '</div>';
+                        $('#slotsContainer').html(html);
+                    } else {
+                        $('#slotsContainer').html('<p class="text-danger">Нет доступных слотов на выбранную дату</p>');
+                    }
+                },
+                error: function() {
+                    $('#slotsContainer').html('<p class="text-danger">Ошибка загрузки расписания</p>');
+                }
+            });
+        }
+        
+        function selectTimeSlot(time) {
+            const date = $('#appointmentDate').val();
+            if (date) {
+                $('#appointmentTime').val(time);
+                // Обновляем скрытое поле с полной датой и временем
+                const fullDateTime = date + 'T' + time + ':00';
+                $('#fullAppointmentDate').val(fullDateTime);
+                
+                // Помечаем выбранный слот
+                $('.time-slot-btn').removeClass('btn-success').addClass('btn-outline-success');
+                $(`button[data-time="${time}"]`).removeClass('btn-outline-success').addClass('btn-success');
+            }
+        }
+        
+        $(document).ready(function() {
+            // При загрузке страницы, если есть выбранный врач, загружаем расписание
+            if ($('#doctorSelect').val()) {
+                loadDoctorSchedule();
+            }
+            
+            // Обновляем скрытое поле при изменении даты или времени вручную
+            $('#appointmentDate, #appointmentTime').on('change', function() {
+                const date = $('#appointmentDate').val();
+                const time = $('#appointmentTime').val();
+                if (date && time) {
+                    const fullDateTime = date + 'T' + time + ':00';
+                    $('#fullAppointmentDate').val(fullDateTime);
+                }
+            });
+            
+            // Валидация формы перед отправкой
+            $('#appointmentForm').on('submit', function(e) {
+                const doctorId = $('#doctorSelect').val();
+                const patientId = $('#PatientId').val();
+                const date = $('#appointmentDate').val();
+                const time = $('#appointmentTime').val();
+                
+                if (!doctorId || !patientId || !date || !time) {
+                    e.preventDefault();
+                    alert('Заполните все обязательные поля');
+                    return false;
+                }
+                
+                // Обновляем скрытое поле перед отправкой
+                const fullDateTime = date + 'T' + time + ':00';
+                $('#fullAppointmentDate').val(fullDateTime);
+                
+                return true;
+            });
+        });
+    </script>
+}

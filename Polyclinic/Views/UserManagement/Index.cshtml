@@ -1,0 +1,71 @@
+﻿@using Clinic.Models;
+@model List<RegisterData>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Управление регистраторами";
+}
+
+<h1>Управление регистраторами</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-success">Добавить регистратора</a>
+</div>
+
+@if (Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Логин</th>
+                    <th>Роль</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.UserId</td>
+                        <td>@user.Username</td>
+                        <td>
+                            <span class="badge bg-info">@user.RoleName</span>
+                        </td>
+                        <td>
+                            <a asp-action="EditPassword" asp-route-id="@user.UserId" class="btn btn-sm btn-warning">
+                                <i class="fas fa-key"></i> Сменить пароль
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@user.UserId" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i> Удалить
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> Регистраторы не найдены.
+    </div>
+}

@@ -1,0 +1,154 @@
+﻿@* @using Clinic.Models; *@
+@* @model RegisterModel *@
+@* @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers *@
+@* @{ *@
+@*     Layout = "_Layout"; *@
+@*     ViewData["Title"] = "Регистрация"; *@
+@* } *@
+
+@* <div class="row justify-content-center"> *@
+@*     <div class="col-md-8"> *@
+@*         <div class="card"> *@
+@*             <div class="card-header"> *@
+@*                 <h3>@ViewData["Title"]</h3> *@
+@*             </div> *@
+@*             <div class="card-body"> *@
+@*                 <form asp-action="Register" method="post" id="registerForm"> *@
+@*                     <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+
+@*                     <div class="row"> *@
+@*                         <div class="col-md-6"> *@
+@*                             <div class="form-group mb-3"> *@
+@*                                 <label asp-for="Username" class="control-label"></label> *@
+@*                                 <input asp-for="Username" class="form-control" id="username" /> *@
+@*                                 <span asp-validation-for="Username" class="text-danger"></span> *@
+@*                                 <small id="usernameFeedback" class="form-text"></small> *@
+@*                             </div> *@
+
+@*                             <div class="form-group mb-3"> *@
+@*                                 <label asp-for="Password" class="control-label"></label> *@
+@*                                 <input asp-for="Password" class="form-control" type="password" /> *@
+@*                                 <span asp-validation-for="Password" class="text-danger"></span> *@
+@*                             </div> *@
+
+@*                             <div class="form-group mb-3"> *@
+@*                                 <label asp-for="ConfirmPassword" class="control-label"></label> *@
+@*                                 <input asp-for="ConfirmPassword" class="form-control" type="password" /> *@
+@*                                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span> *@
+@*                             </div> *@
+@*                         </div> *@
+
+@*                         <div class="col-md-6"> *@
+@*                             <div class="form-group mb-3"> *@
+@*                                 <label asp-for="Role" class="control-label"></label> *@
+@*                                 <select asp-for="Role" class="form-control" id="roleSelect"> *@
+@*                                     <option value="">Выберите роль</option> *@
+@*                                     <option value="REGISTRAR">Регистратор</option> *@
+@*                                     <option value="DOCTOR">Врач</option> *@
+@*                                     <option value="HEAD_DOCTOR">Заведующий отделением</option> *@
+@*                                 </select> *@
+@*                                 <span asp-validation-for="Role" class="text-danger"></span> *@
+@*                             </div> *@
+
+@*                             <div class="alert alert-info" role="alert"> *@
+@*                                 <h6 class="alert-heading">Пояснение ролей:</h6> *@
+@*                                 <ul class="mb-0"> *@
+@*                                     <li><strong>Регистратор</strong> - запись пациентов, управление расписанием</li> *@
+@*                                     <li><strong>Врач</strong> - просмотр своих приемов, ведение медицинских записей</li> *@
+@*                                     <li><strong>Заведующий</strong> - полный доступ ко всем функциям системы</li> *@
+@*                                 </ul> *@
+@*                             </div> *@
+@*                         </div> *@
+@*                     </div> *@
+
+@*                     <div class="form-group"> *@
+@*                         <button type="submit" class="btn btn-primary w-100" id="submitBtn"> *@
+@*                             Зарегистрироваться *@
+@*                         </button> *@
+@*                     </div> *@
+@*                 </form> *@
+@*             </div> *@
+@*             <div class="card-footer text-center"> *@
+@*                 <a asp-action="Login">Уже есть аккаунт? Войдите</a> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+
+@* @section Scripts { *@
+@*     @{ *@
+@*         await Html.RenderPartialAsync("_ValidationScriptsPartial"); *@
+@*     } *@
+
+@*     <script> *@
+@*         $(document).ready(function () { *@
+@*             let usernameAvailable = false; *@
+
+@*             // Проверка доступности имени пользователя *@
+@*             $('#username').on('blur', function () { *@
+@*                 const username = $(this).val().trim(); *@
+@*                 if (username.length >= 3) { *@
+@*                     $.get('@Url.Action("CheckUsername", "Auth")', { username: username }) *@
+@*                         .done(function (data) { *@
+@*                             const feedback = $('#usernameFeedback'); *@
+@*                             if (data.available) { *@
+@*                                 feedback.removeClass('text-danger').addClass('text-success'); *@
+@*                                 feedback.text(data.message); *@
+@*                                 usernameAvailable = true; *@
+@*                             } else { *@
+@*                                 feedback.removeClass('text-success').addClass('text-danger'); *@
+@*                                 feedback.text(data.message); *@
+@*                                 usernameAvailable = false; *@
+@*                             } *@
+@*                             updateSubmitButton(); *@
+@*                         }); *@
+@*                 } *@
+@*             }); *@
+
+@*             // Показ/скрытие поля выбора врача *@
+@*             $('#roleSelect').on('change', function () { *@
+@*                 const role = $(this).val(); *@
+@*                 const doctorIdGroup = $('#doctorIdGroup'); *@
+
+@*                 if (role === 'DOCTOR' || role === 'HEAD_DOCTOR') { *@
+@*                     doctorIdGroup.show(); *@
+@*                     $('#doctorSelect').prop('required', true); *@
+@*                 } else { *@
+@*                     doctorIdGroup.hide(); *@
+@*                     $('#doctorSelect').prop('required', false); *@
+@*                     $('#doctorSelect').val(''); *@
+@*                 } *@
+
+@*                 updateSubmitButton(); *@
+@*             }); *@
+
+@*             // Обновление состояния кнопки отправки *@
+@*             function updateSubmitButton() { *@
+@*                 const role = $('#roleSelect').val(); *@
+@*                 const password = $('#Password').val(); *@
+@*                 const confirmPassword = $('#ConfirmPassword').val(); *@
+
+@*                 let isValid = usernameAvailable && role && password && password === confirmPassword; *@
+
+@*                 if (role === 'DOCTOR' || role === 'HEAD_DOCTOR') { *@
+@*                     isValid = isValid && doctorId; *@
+@*                 } *@
+
+@*                 $('#submitBtn').prop('disabled', !isValid); *@
+@*             } *@
+
+@*             // Отслеживание изменений в полях *@
+@*             $('#Password, #ConfirmPassword, #doctorSelect').on('input change', updateSubmitButton); *@
+
+@*             // Предотвращение отправки формы при нажатии Enter в поле выбора врача *@
+@*             $('#doctorSelect').on('keypress', function (e) { *@
+@*                 if (e.which === 13) { *@
+@*                     e.preventDefault(); *@
+@*                 } *@
+@*             }); *@
+
+@*             // Инициализация состояния *@
+@*             updateSubmitButton(); *@
+@*         }); *@
+@*     </script> *@
+@* } *@
